@@ -16,6 +16,12 @@ public class GUI extends JFrame {
 	public int mx = -100;
     public int my = -100;
     
+
+    public int smileyX = 605;
+    public int smileyY = 5;
+    
+    public boolean hap = true;
+    
     Random rand = new Random();
 	
     int [][] mines = new int [16][9];
@@ -92,7 +98,7 @@ public class GUI extends JFrame {
 						
 					g.fillRect(spacing+i*80, spacing+j*80+80, 80 - 2*spacing, 80 - 2*spacing);
 					if(revealed[i][j] == true) {
-						g.setColor(Color.BLACK);
+						g.setColor(Color.black);
 						if (mines[i][j] == 0 && neighbours [i][j] != 0) 	{
 							if ( neighbours [i][j] ==1) {
 								g.setColor(Color.blue);
@@ -125,15 +131,40 @@ public class GUI extends JFrame {
 						g.fillRect(i*80+10+20, +j*80+80+20 , 20, 40);
 						g.fillRect(i*80+20, +j*80+80+10+20, 40, 20);
 						g.fillRect(i*80+5 +20, +j*80+80+5+20, 30, 30);
-						g.clearRect(i*80+38, j*80+80,4, 50);
-						g.clearRect(i*80, j*80+80,50, 4);
+						g.fillRect(i*80+38, j*80+80+15, 4, 50);
+						g.fillRect(i*80+15, j*80+80+38, 50, 4);
+						g.fillRect(i*80+20, j*80+80+20,5,5);
+						g.fillRect(i*80+55, j*80+80+20,5,5);
+						g.fillRect(i*80+20, j*80+80+55,5,5);
+						g.fillRect(i*80+55, j*80+80+55,5,5);
+						g.setColor(Color.white);
+						g.fillRect(i*80+29, j*80+80+29,9,9);
+						
 					}
+						
 				}
+					
 			}
+				
 		}
 		
+			g.setColor(Color.yellow);
+			g.fillOval(smileyX, smileyY, 70, 70);
+			g.setColor(Color.black);
+			g.fillOval(smileyX+15, smileyY+20, 10, 10);
+			g.fillOval(smileyX+45, smileyY+20, 10, 10);
+			if(hap == true ) {
+			g.fillRect(smileyX+20, smileyY+50,30, 5);
+			g.fillRect(smileyX+17, smileyY+45,5, 5);
+			g.fillRect(smileyX+48, smileyY+45,5, 5);
+			}else {
+				g.fillRect(smileyX+20, smileyY+50,30, 5);
+				g.fillRect(smileyX+17, smileyY+55,5, 5);
+				g.fillRect(smileyX+48, smileyY+55,5, 5);
+			}
 	 }
-	}
+		
+  }
 	
 	public class Move implements MouseMotionListener{
 
