@@ -9,6 +9,8 @@ import java.awt.event.MouseMotionListener;
 
 public class GUI extends JFrame {
 
+	Date startDate = new Date();
+	
 	int spacing = 5;
 	
 	int neighs = 0;
@@ -16,11 +18,18 @@ public class GUI extends JFrame {
 	public int mx = -100;
     public int my = -100;
     
-
     public int smileyX = 605;
     public int smileyY = 5;
     
+    public int timeX = 1120;
+    public int timeY = 5;
+    
+    public int sec = 0;
+    
+    
     public boolean hap = true;
+    
+    public boolean victory =false;
     
     Random rand = new Random();
 	
@@ -83,9 +92,8 @@ public class GUI extends JFrame {
 				for (int j = 0 ;j<9;j++) {
 					g.setColor(Color.gray);
 					
-					if (mines[i][j] == 1) {
-						g.setColor(Color.yellow);
-					}
+					
+					
 					if(revealed[i][j] == true) {
 						g.setColor(Color.white);
 						if (mines[i][j]==1) {
@@ -141,6 +149,7 @@ public class GUI extends JFrame {
 						g.fillRect(i*80+29, j*80+80+29,9,9);
 						
 					}
+					
 						
 				}
 					
@@ -162,9 +171,28 @@ public class GUI extends JFrame {
 				g.fillRect(smileyX+17, smileyY+55,5, 5);
 				g.fillRect(smileyX+48, smileyY+55,5, 5);
 			}
+			
+			
+			g.setColor(Color.black);
+			g.fillRect(timeX, timeY, 140, 70);
+			sec = (int) ((new Date().getTime()-startDate.getTime())/ 1000);
+			if (sec > 999) {
+				sec = 999;
+			}
+			g.setColor(Color.white);
+			g.setFont(new Font("Tahoma",Font.PLAIN,80));
+			if(sec < 10) {
+				g.drawString("00"+Integer.toString(sec), timeX, timeY+65);
+			}else if (sec<100) {
+				g.drawString("0"+Integer.toString(sec), timeX, timeY+65);
+			}else {
+				g.drawString(Integer.toString(sec), timeX, timeY+65);	
 	 }
 		
+		
   }
+	}
+	
 	
 	public class Move implements MouseMotionListener{
 
@@ -225,6 +253,9 @@ public class GUI extends JFrame {
 			
 		}
 		
+	}
+	public void resetAll(){
+		hap = true;
 	}
 	
 		public int inBoxX() {
