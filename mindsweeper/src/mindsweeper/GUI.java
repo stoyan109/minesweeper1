@@ -12,10 +12,12 @@ public class GUI extends JFrame {
 	public boolean resetter = false;
 	
 	Date startDate = new Date();
-	
+	Date endDate;
 	int spacing = 5;
 	
 	int neighs = 0;
+	
+	String vicMes = "y";
 	
 	public int mx = -100;
     public int my = -100;
@@ -29,6 +31,11 @@ public class GUI extends JFrame {
     
     public int timeX = 1120;
     public int timeY = 5;
+    
+   public int  vicMesX= 800;
+   public int  vicMesY= -50;
+	
+	
     
     public int sec = 0;
     
@@ -204,9 +211,17 @@ public class GUI extends JFrame {
 			}else {
 				g.drawString(Integer.toString(sec), timeX, timeY+65);	
 	 }
+		if (victory == true ) {
+			g.setColor(Color.green);
+			vicMes = "YOU WIN";
+		}else if(defeat== true) {
+			g.setColor(Color.red);
+			vicMes = "YOU LOSE";
+		}
 		
 		
-  }
+		
+       }
 	}
 	
 	
@@ -287,6 +302,7 @@ public class GUI extends JFrame {
 				if(revealed[i][j]==true && mines[i][j]==1) {
 					defeat = true;
 					hap = false;
+					endDate= new Date();
 				}
 			}
 		}
@@ -323,6 +339,8 @@ public class GUI extends JFrame {
 		resetter = true;
 		
 		startDate = new Date();
+		
+		vicMesY = -50;
 		
 		hap = true;
 		victory = false;
