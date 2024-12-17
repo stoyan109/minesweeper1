@@ -9,6 +9,8 @@ import java.awt.event.MouseMotionListener;
 
 public class GUI extends JFrame {
 
+	public boolean resetter = false;
+	
 	Date startDate = new Date();
 	
 	int spacing = 5;
@@ -21,15 +23,22 @@ public class GUI extends JFrame {
     public int smileyX = 605;
     public int smileyY = 5;
     
+    public int smileycenterX = smileyX+35;
+    public int smileycenterY= smileyY+35;
+
+    
     public int timeX = 1120;
     public int timeY = 5;
     
     public int sec = 0;
     
+   
+     
+    public boolean hap = true;  
     
-    public boolean hap = true;
+    public boolean victory = false;
     
-    public boolean victory =false;
+    public boolean defeat = false;
     
     Random rand = new Random();
 	
@@ -45,7 +54,8 @@ public class GUI extends JFrame {
 	this.setVisible(true);
 	this.setResizable(false);
 	
-	for (int i = 0; i<16;i++) {
+	
+			for (int i = 0; i<16;i++) {
 		for (int j = 0 ;j<9;j++) {
 		if(rand.nextInt(100)< 24)
 			mines[i][j]=1;
@@ -67,8 +77,7 @@ public class GUI extends JFrame {
 						}
 	          }
 					neighbours[i][j]=neighs;
-	    }
-				
+	    }	
 			
     }
 }
@@ -175,11 +184,18 @@ public class GUI extends JFrame {
 			
 			g.setColor(Color.black);
 			g.fillRect(timeX, timeY, 140, 70);
+			if(defeat == false && victory == false) {
 			sec = (int) ((new Date().getTime()-startDate.getTime())/ 1000);
+			}
 			if (sec > 999) {
 				sec = 999;
 			}
 			g.setColor(Color.white);
+			if(victory== true) {
+				g.setColor(Color.green);
+			}	else if(defeat== true) {
+				g.setColor(Color.red);
+			}
 			g.setFont(new Font("Tahoma",Font.PLAIN,80));
 			if(sec < 10) {
 				g.drawString("00"+Integer.toString(sec), timeX, timeY+65);
@@ -206,6 +222,7 @@ public class GUI extends JFrame {
 		public void mouseMoved(MouseEvent e) {
 			mx = e.getX();
 			my = e.getY();
+			
 			//System.out.println("X : " + mx + ",Y:" +my); 
 			
 		}
@@ -217,6 +234,9 @@ public class GUI extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
+			mx = e.getX();
+			my = e.getY();
+			
 			if(inBoxX()!= -1 && inBoxX() != -1) {
 				revealed[inBoxX()][inBoxY()]= true ;
 			}
@@ -226,9 +246,12 @@ public class GUI extends JFrame {
 			}else {
 				System.out.println("the pointer is not in a box");
 			}
-			
+			if(inSmiley()== true) {
+			  resetAll();
+			}
 		}
 
+		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
@@ -254,10 +277,94 @@ public class GUI extends JFrame {
 		}
 		
 	}
-	public void resetAll(){
-		hap = true;
-	}
 	
+	
+	
+	
+	public void checkvict() {
+		for (int i = 0; i<16;i++) {
+			for (int j = 0 ;j<9;j++) {
+				if(revealed[i][j]==true && mines[i][j]==1) {
+					defeat = true;
+					hap = false;
+				}
+			}
+		}
+		if (totalBox()>=144-totalMines()) {
+			victory = true;
+		}
+	}
+	public int totalMines() {
+		 int total = 0;
+		for (int i = 0; i<16;i++) {
+			for (int j = 0 ;j<9;j++) {
+				if(mines[i][j]==1) {
+					total++;
+				}
+			}
+		}
+		return total;
+	}
+	public int totalBox() {
+		int total = 0;
+		for (int i = 0; i<16;i++) {
+			for (int j = 0 ;j<9;j++) {
+				if(revealed[i][j]==true) {
+					total++;
+				}
+			}
+		}
+		return 0;
+	}
+		
+	
+	
+	public void resetAll(){
+		resetter = true;
+		
+		startDate = new Date();
+		
+		hap = true;
+		victory = false;
+		defeat = false;
+		
+		for (int i = 0; i<16;i++) {
+	for (int j = 0 ;j<9;j++) {
+	if(rand.nextInt(100)< 24)
+		mines[i][j]=1;
+   
+	else {
+		mines[i][j] = 0 ;
+	}
+	revealed [i][j] = false;
+	flagged [i][j] = false;
+ }
+}
+	for (int i = 0; i<16;i++) {
+		for (int j = 0 ;j<9;j++) {
+			neighs =0;
+			for (int m = 0; m<16;m++) {
+				for (int n = 0 ;n<9;n++) {
+				if (!(m == i && n == j)) 
+					if (isN(i,j,m,n)== true) {
+						neighs++;
+					}
+          }
+				neighbours[i][j]=neighs;
+			}
+		}
+		
+	}
+	resetter = false;
+		
+}
+	public boolean inSmiley() {
+        int dif =(int) Math.sqrt(Math.abs(mx-smileycenterX)*Math.abs(mx-smileycenterX)+(my-smileycenterY)*Math.abs(my-smileycenterY));
+		if(dif < 35) {
+			return true;
+		}
+		return false;
+	}
 		public int inBoxX() {
 			for (int i = 0; i<16;i++) {
 				for (int j = 0 ;j<9;j++) {

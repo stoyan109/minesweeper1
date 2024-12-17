@@ -13,8 +13,12 @@ public class Main implements Runnable {
 	public void run() {
 		while(true) {
 			gui.repaint();
+			if (gui.resetter == false) {
+			gui.checkvict();
+			System.out.println("Victory: "+gui.victory+ ",Dfeat:"+ gui.defeat);
 		}
 		
 	}
 
+}
 }
