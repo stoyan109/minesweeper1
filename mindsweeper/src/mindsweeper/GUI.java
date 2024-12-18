@@ -11,13 +11,17 @@ public class GUI extends JFrame {
 
 	public boolean resetter = false;
 	
+	public boolean  flagger= false; 
+	
 	Date startDate = new Date();
+	
 	Date endDate;
+	
 	int spacing = 5;
 	
 	int neighs = 0;
 	
-	String vicMes = "y";
+     String vicMes = "nothing";
 	
 	public int mx = -100;
     public int my = -100;
@@ -28,18 +32,21 @@ public class GUI extends JFrame {
     public int smileycenterX = smileyX+35;
     public int smileycenterY= smileyY+35;
 
+    public int flaggerX = 445;
+    public int flaggerY = 5;
+    
+    public int flaggerCenterX = flaggerX +35;
+    public int flaggerCenterY = flaggerY +35;
+
+    
     
     public int timeX = 1120;
     public int timeY = 5;
     
-   public int  vicMesX= 800;
+   public int  vicMesX= 50;
    public int  vicMesY= -50;
 	
-	
-    
     public int sec = 0;
-    
-   
      
     public boolean hap = true;  
     
@@ -53,6 +60,8 @@ public class GUI extends JFrame {
     int [][] neighbours = new int [16][9];
     boolean[][] revealed = new boolean [16][9];
     boolean[][] flagged = new boolean [16][9];
+
+	private int flaggercenterY;
   
 	public GUI() {
 	this.setTitle("minesweeper");
@@ -168,6 +177,13 @@ public class GUI extends JFrame {
 					
 						
 				}
+					if (flagged[i][j]==true) {
+						g.setColor(Color.BLACK);
+						g.fillRect(i*80+31,j*80+80+15, 7, 40);
+						g.fillRect(i*80+20, j*80+80+50, 30, 10);
+						g.setColor(Color.red);
+						g.fillRect(i*80+13, j*80+80+15, 18, 15);
+					}
 					
 			}
 				
@@ -188,6 +204,18 @@ public class GUI extends JFrame {
 				g.fillRect(smileyX+48, smileyY+55,5, 5);
 			}
 			
+			g.setColor(Color.BLACK);
+			g.fillRect(flaggerX+31,flaggerY+15, 7, 40);
+			g.fillRect(flaggerX+20, flaggerY+50, 30, 10);
+			g.setColor(Color.red);
+			g.fillRect(flaggerX+13, flaggerY+15, 18, 15);
+			
+			if(flagger == true) {
+				g.setColor(Color.red);
+			
+			g.setColor(Color.BLACK);
+			g.drawOval(flaggerX,flaggerY, 70, 70);
+			}
 			
 			g.setColor(Color.black);
 			g.fillRect(timeX, timeY, 140, 70);
@@ -219,10 +247,18 @@ public class GUI extends JFrame {
 			vicMes = "YOU LOSE";
 		}
 		
-		
+		if(victory == true||defeat == true) {
+			 vicMesY = - 50 + (int) (new Date().getTime() - endDate.getTime()) / 10;
+			if(vicMesY > 70) {
+				vicMesY = 70;
+			}
+			g.setFont( new Font("Tahoma", Font.PLAIN,70));
+			 g.drawString(vicMes,vicMesX , vicMesY);
+			
+		}
 		
        }
-	}
+	} 
 	
 	
 	public class Move implements MouseMotionListener{
@@ -252,19 +288,49 @@ public class GUI extends JFrame {
 			mx = e.getX();
 			my = e.getY();
 			
-			if(inBoxX()!= -1 && inBoxX() != -1) {
-				revealed[inBoxX()][inBoxY()]= true ;
-			}
+			
+			
 			
 			if(inBoxX()!= -1 && inBoxX() != -1) {
 				System.out.println("the mouse is in the ["+ inBoxX() +","+ inBoxY()+"] , number of mine neighs" +neighbours  [ inBoxX()][ inBoxY()]);
+			if (flagger == true&&revealed[inBoxX()][inBoxY()]==false ) {
+				if (flagged[inBoxX()][inBoxY()] = false) {
+				flagged[inBoxX()][inBoxY()] = true;
+			 
 			}else {
-				System.out.println("the pointer is not in a box");
+				flagged[inBoxX()][inBoxY()] = true;	
+			 }
+			}else {
+				revealed[inBoxX()][inBoxY()]= true ;
 			}
+		
+			}else {
+				
+				System.out.println("the pointer is not in a box");
+			
 			if(inSmiley()== true) {
 			  resetAll();
 			}
+	
+			
+			if (inFlagger() == true) {
+				if(flagger = true) {
+					flagger = true;
+				}else {
+					flagger = false;
+				}
+				
+			}	
+			
+			}
+			
 		}
+			
+			
+			
+			
+			
+		
 
 		
 		@Override
@@ -297,6 +363,7 @@ public class GUI extends JFrame {
 	
 	
 	public void checkvict() {
+		if (defeat == false) {
 		for (int i = 0; i<16;i++) {
 			for (int j = 0 ;j<9;j++) {
 				if(revealed[i][j]==true && mines[i][j]==1) {
@@ -306,8 +373,10 @@ public class GUI extends JFrame {
 				}
 			}
 		}
-		if (totalBox()>=144-totalMines()) {
+		}
+		if (totalBox()>=144-totalMines() && victory == false) {
 			victory = true;
+			endDate = new Date();
 		}
 	}
 	public int totalMines() {
@@ -378,6 +447,13 @@ public class GUI extends JFrame {
 }
 	public boolean inSmiley() {
         int dif =(int) Math.sqrt(Math.abs(mx-smileycenterX)*Math.abs(mx-smileycenterX)+(my-smileycenterY)*Math.abs(my-smileycenterY));
+		if(dif < 35) {
+			return true;
+		}
+		return false;
+	}
+	public boolean inFlagger() {
+        int dif =(int) Math.sqrt(Math.abs(mx-flaggerCenterX)*Math.abs(mx-flaggerCenterX)+(my-flaggerCenterY)*Math.abs(my-flaggerCenterY));
 		if(dif < 35) {
 			return true;
 		}
